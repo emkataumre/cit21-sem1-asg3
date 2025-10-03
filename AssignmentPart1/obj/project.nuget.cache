@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "XRU+HDXNSIY=",
+  "success": true,
+  "projectFilePath": "/home/div/repo/cit21-sem1-portfolio/AssignmentPart1/AssignmentPart1.csproj",
+  "expectedPackageFiles": [
+    "/home/div/.nuget/packages/microsoft.aspnetcore.app.ref/9.0.9/microsoft.aspnetcore.app.ref.9.0.9.nupkg.sha512"
+  ],
+  "logs": []
+}
