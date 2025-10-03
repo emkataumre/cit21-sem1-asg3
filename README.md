@@ -1,1 +1,3 @@
-"# cit21-sem1-portfolio" 
+## Assignment 3 part 1:
+
+
