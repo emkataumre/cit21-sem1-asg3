@@ -42,6 +42,19 @@ public class MenuLoop
             }
             else if (userInput == "6")
             {
+                Console.Write("Url to parse: ");
+                string url = Console.ReadLine();
+                UrlParser parser = new UrlParser();
+
+                bool isValid = parser.ParseUrl(url);
+
+                Console.WriteLine(isValid);
+                Console.WriteLine($"Path = {parser.Path}");
+                Console.WriteLine($"HasId = {parser.HasId}");
+                Console.WriteLine($"Id = {parser.Id}");
+            }
+            else if (userInput == "7")
+            {
                 Environment.Exit(0);
             }
             else
@@ -70,8 +83,9 @@ public class MenuLoop
         Console.WriteLine("[2]: Show category by ID");
         Console.WriteLine("[3]: Update category");
         Console.WriteLine("[4]: Delete category");
-        Console.WriteLine("[5: Create category");
-        Console.WriteLine("[6]: Exit menu");
+        Console.WriteLine("[5]: Create category");
+        Console.WriteLine("[6]: Parse url");
+        Console.WriteLine("[7]: Exit menu");
         Console.Write("Operation number: ");
     }
 }
