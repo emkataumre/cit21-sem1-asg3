@@ -1,7 +1,4 @@
 using System;
-using System.Diagnostics;
-using System.Net.Sockets;
-using System.Text.Json;
 using System.Text.RegularExpressions;
 
 namespace Category;
@@ -24,6 +21,24 @@ public class Request
 public class RequestValidator
 {
 
+    public static bool ValidatePath(string path, out int? id, out string basePath)
+    {
+        basePath = "";
+        id = null;
+        var match = Regex.Match(path, @"^(/api/categories)(?:/(\d+))?$");
+
+        if (!match.Success) return false;
+
+        basePath = match.Groups[1].Value;
+
+        if (match.Groups[2].Success)
+        {
+            id = int.Parse(match.Groups[2].Value);
+        }
+
+        return true;
+    }
+
     private static Response MakeResponse(int status, string body)
     {
         Response resp = new Response { Status = status, Body = body };
@@ -41,8 +56,7 @@ public class RequestValidator
         if (!long.TryParse(request.Date, out long ts) || ts <= 0)
             return MakeResponse(4, "illegal date");
 
-        if (!Regex.IsMatch(request.Path, @"^/api/categories(/\d+)?$"))
-            return MakeResponse(4, "illegal path");
+        if (!ValidatePath(request.Path, out int? id, out string basePath)) return MakeResponse(4, "illegal path");
 
         return MakeResponse(1, "Ok");
     }
