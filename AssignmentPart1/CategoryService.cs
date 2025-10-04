@@ -30,14 +30,14 @@ class CategoryService
 
     public static Category? GetCategory(int cid)
     {
-        Category category = categories[cid];
-        return category;
+        return categories.Find(c => c.Cid == cid);
     }
 
     public static bool UpdateCategory(int id, string newName)
     {
         Category category = GetCategory(id);
         if (category is null) return false;
+        if (string.IsNullOrWhiteSpace(newName)) return false;
         if (category.Name == newName) return false;
         category.Name = newName;
         return true;

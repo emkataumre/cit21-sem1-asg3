@@ -9,15 +9,15 @@ namespace Category;
 public class Response
 {
     public int Status { get; set; }
-    public string Body { get; set; }
+    public string? Body { get; set; }
 
 }
 
 public class Request
 {
-    public string Method { get; set; }
-    public string Path { get; set; }
-    public string Date { get; set; }
+    public required string Method { get; set; }
+    public required string Path { get; set; }
+    public required string Date { get; set; }
     public string? Body { get; set; }
 }
 
