@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Net.Sockets;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -23,19 +24,26 @@ public class Request
 public class RequestValidator
 {
 
+    private static Response MakeResponse(int status, string body)
+    {
+        Response resp = new Response { Status = status, Body = body };
+        Console.WriteLine(status + " " + body);
+        return resp;
+    }
     public static Response ValidateRequest(Request request)
     {
         var validMethods = new List<string> { "create", "read", "update", "delete" };
 
-        if (string.IsNullOrWhiteSpace(request.Method)) return new Response { Status = 4, Body = "missing method" };
-        if (!validMethods.Contains(request.Method)) return new Response { Status = 4, Body = "illegal method" };
-        if (string.IsNullOrWhiteSpace(request.Path)) return new Response { Status = 4, Body = "missing path" };
-        if (string.IsNullOrWhiteSpace(request.Date)) return new Response { Status = 4, Body = "missing date" };
-        if (!long.TryParse(request.Date, out long ts) || ts <= 0) return new Response { Status = 4, Body = "illegal date" };
-        bool validPath = Regex.IsMatch(request.Path, @"^/api/categories(/\d+)?$");
-        if (validPath == false) return new Response { Status = 4, Body = "illegal path" };
+        if (string.IsNullOrWhiteSpace(request.Method)) return MakeResponse(4, "missing method");
+        if (!validMethods.Contains(request.Method)) return MakeResponse(4, "illegal method");
+        if (string.IsNullOrWhiteSpace(request.Path)) return MakeResponse(4, "missing path");
+        if (string.IsNullOrWhiteSpace(request.Date)) return MakeResponse(4, "missing date");
+        if (!long.TryParse(request.Date, out long ts) || ts <= 0)
+            return MakeResponse(4, "illegal date");
 
+        if (!Regex.IsMatch(request.Path, @"^/api/categories(/\d+)?$"))
+            return MakeResponse(4, "illegal path");
 
-        return new Response { Status = 2, Body = "OK" };
+        return MakeResponse(1, "Ok");
     }
 }
