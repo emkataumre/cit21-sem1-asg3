@@ -11,3 +11,6 @@ cd Assignment3 && dotnet run
 ```
 cd TestsAssignment3 && dotnet test Assignment3TestSuite.csproj
 ```
+
+Tests are taken from:
+https://github.com/bulskov 
