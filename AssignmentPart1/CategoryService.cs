@@ -1,12 +1,17 @@
 namespace AssignmentPart1;
 public class CategoryService
 {
-    static List<Category> _categories = new List<Category>()
+    private static List<Category> _categories;
+
+    public CategoryService()
     {
-        new Category() { Id = 1, Name = "Beverages" },
-        new Category() { Id = 2, Name = "Condiments" },
-        new Category() { Id = 3, Name = "Confections" },
-    };
+        _categories = new List<Category>()
+        {
+            new Category() { Id = 1, Name = "Beverages" },
+            new Category() { Id = 2, Name = "Condiments" },
+            new Category() { Id = 3, Name = "Confections" },
+        };
+    }
     
     public List<Category> GetCategories()
     {
