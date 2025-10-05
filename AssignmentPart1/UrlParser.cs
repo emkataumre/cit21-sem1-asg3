@@ -4,8 +4,7 @@ public class UrlParser {
     public bool HasId { get; set; }
     public int Id { get; set; }
     public string Path { get; set; }
-
-    //  /api/categories/3 
+    
     public bool ParseUrl(string url)
     {
         bool isValid = Uri.IsWellFormedUriString(url, UriKind.Relative);
@@ -27,8 +26,16 @@ public class UrlParser {
             HasId = true;
             Id = Convert.ToInt32(urlParts[2]);
         }
-        
-        Path = string.Join('/', urlParts, 0, 2);
+
+        for (int i = 0; i < urlParts.Length; i++)
+        {
+            // exit loop early if id is part of the path
+            if (i == 2)
+            {
+                break;
+            }
+            Path = Path + "/" + urlParts[i];
+        }
         
         return true;
     }
