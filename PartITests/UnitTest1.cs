@@ -13,7 +13,7 @@ public class PartITests
     /// 
     ////////////////////////////////////////////////////////// 
 
-    /*[Fact]
+    [Fact]
     public void UrlParser_ValidUrlWithoutId_ShouldParseCorrectly()
     {
         // Arrange
@@ -38,14 +38,15 @@ public class PartITests
         // Assert
         Assert.True(result);
         Assert.True(urlParser.HasId);
-        Assert.Equal("5", urlParser.Id);
+        Assert.Equal(5, urlParser.Id);
         Assert.Equal("/api/categories", urlParser.Path);
     }
 
+
     //////////////////////////////////////////////////////////
-    /// 
+    ///
     /// Testing RequestValidator class
-    /// 
+    ///
     //////////////////////////////////////////////////////////
 
     [Fact]
@@ -130,7 +131,7 @@ public class PartITests
         // Assert
         Assert.Contains("illegal date", result.Status);
     }
-
+    
     [Theory]
     [InlineData("create")]
     [InlineData("update")]
@@ -207,7 +208,7 @@ public class PartITests
         var result = requestValidator.ValidateRequest(request);
         // Assert
         Assert.Equal("1 Ok", result.Status);
-    }*/
+    }
 
     
 
@@ -245,7 +246,7 @@ public class PartITests
         Assert.Equal(2, category.Id);
         Assert.Equal("Condiments", category.Name);
     }
-    
+
     [Fact]
     public void CategoryService_GetCategoryById_NonExistent()
     {
