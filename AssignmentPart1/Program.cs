@@ -1,3 +1,4 @@
-﻿using AssignmentPart1;
+﻿static void Main(string[] args)
+{
 
-MenuLoop.Start();
+}

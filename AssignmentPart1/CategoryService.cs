@@ -3,39 +3,59 @@ public class CategoryService
 {
     static List<Category> _categories = new List<Category>()
     {
-        new Category() { CId = 1, Name = "Beverages" },
-        new Category() { CId = 2, Name = "Condiments" },
-        new Category() { CId = 3, Name = "Confections" },
+        new Category() { Id = 1, Name = "Beverages" },
+        new Category() { Id = 2, Name = "Condiments" },
+        new Category() { Id = 3, Name = "Confections" },
     };
     
-    public static void GetCategories()
+    public List<Category> GetCategories()
+    {
+        return _categories;
+    }
+
+    public Category? GetCategory(int cid)
+    {
+        if (cid < 1 || cid > _categories[^1].Id)
+        {
+            return null;
+        }
+        
+        return _categories[cid - 1];
+    }
+
+    public bool UpdateCategory(int id, string newName)
+    {
+        if (id < 1 || id > _categories[^1].Id)
+        {
+            return false;
+        }
+        
+        _categories[id - 1].Name = newName;
+        return true;
+    }
+    
+    public bool  DeleteCategory(int id)
+    {
+        if (id < 1 || id > _categories[^1].Id)
+        {
+            return false;
+        }
+        
+        _categories.RemoveAt(id - 1);
+        return true;
+    }
+
+    public bool CreateCategory(int id, string name)
     {
         foreach (var category in _categories)
         {
-            Console.Write($"id: {category.CId}, ");
-            Console.Write($"Name: {category.Name}");
-            Console.WriteLine();
+            if (id == category.Id)
+            {
+                return false;
+            }
         }
-    }
-
-    public static void GetCategory(int cid)
-    {
-        int indexOfCategory = cid - 1;
-        Console.WriteLine($"id: {_categories[indexOfCategory].CId}, name: {_categories[indexOfCategory].Name}");
-    }
-
-    public static void UpdateCategory(int id, string newName)
-    {
-        _categories[id - 1].Name = newName;
-    }
-    
-    public static void DeleteCategory(int id)
-    {
-        _categories.RemoveAt(id - 1);
-    }
-
-    public static void CreateCategory(string name)
-    {
-        _categories.Add(new Category() {CId = _categories[^1].CId + 1, Name = name});
+        
+        _categories.Add(new Category() {Id = id, Name = name});
+        return true;
     }
 }
