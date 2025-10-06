@@ -243,7 +243,7 @@ public class PartITests
         var category = categoryService.GetCategory(2);
         // Assert
         Assert.NotNull(category);
-        Assert.Equal(2, category.Id);
+        Assert.Equal(2, category.Cid);
         Assert.Equal("Condiments", category.Name);
     }
 
@@ -318,7 +318,7 @@ public class PartITests
         // Assert
         Assert.True(result);
         Assert.NotNull(newCategory);
-        Assert.Equal(4, newCategory.Id);
+        Assert.Equal(4, newCategory.Cid);
         Assert.Equal("NewCategory", newCategory.Name);
     }
 
