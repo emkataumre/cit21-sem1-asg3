@@ -25,22 +25,40 @@ try
     while (true)
     {
         Console.Write("Waiting for a connection... ");
-        using TcpClient client = server.AcceptTcpClient();
+        TcpClient client = server.AcceptTcpClient();
         Console.WriteLine("Connected!");
+        
+        var clientThread = new Thread(() => HandleClient(client, catService));
+        clientThread.Start();
+    }
+}
+catch (SocketException e)
+{
+    Console.WriteLine($"SocketException: {e}");
+}
+finally
+{
+    server?.Stop();
+    Console.WriteLine("Server stopped.");
+}
 
-        using NetworkStream stream = client.GetStream();
-        byte[] buffer = new byte[2048];
-        int bytesRead = stream.Read(buffer, 0, buffer.Length);
-        if (bytesRead == 0) continue;
-
-        string data = Encoding.UTF8.GetString(buffer, 0, bytesRead);
-        Console.WriteLine($"Received: {data}");
-
-        var requestValidator = new RequestValidator();
-        Response response = new Response();
-
-        try
+void HandleClient(TcpClient client, CategoryService catService)
+{
+    try
+    {
+        using (client)
+        using (NetworkStream stream = client.GetStream())
         {
+            byte[] buffer = new byte[2048];
+            int bytesRead = stream.Read(buffer, 0, buffer.Length);
+            if (bytesRead == 0) return;
+
+            string data = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+            Console.WriteLine($"Received: {data}");
+
+            var requestValidator = new RequestValidator();
+            Response response = new Response();
+
             var json = JsonObject.Parse(data);
             var request = new Request
             {
@@ -49,20 +67,20 @@ try
                 Date = json["date"]?.ToString(),
                 Body = json["body"]?.ToString()
             };
-            
+
             var validation = requestValidator.ValidateRequest(request);
             response.Status = validation.Status;
-            
+
             if (validation.Status != "1 Ok")
             {
                 byte[] msg = Encoding.UTF8.GetBytes(ToJson(response));
                 stream.Write(msg, 0, msg.Length);
-                continue;
+                return;
             }
-            
+
             var urlParser = new UrlParser();
             urlParser.ParseUrl(request.Path);
-            
+
             switch (request.Method)
             {
                 case "echo":
@@ -90,6 +108,7 @@ try
                         response.Status = "1 Ok";
                         response.Body = ToJson(categories);
                     }
+
                     break;
 
                 case "create":
@@ -98,7 +117,7 @@ try
                         response.Status = "4 Bad Request";
                         break;
                     }
-                    
+
                     var jsonBody = JsonObject.Parse(request.Body);
                     var name = jsonBody["name"]?.ToString();
 
@@ -116,7 +135,7 @@ try
                         response.Status = "4 Bad Request";
                         break;
                     }
-                    
+
                     var existing = catService.GetCategory(urlParser.Id);
                     if (existing is null)
                     {
@@ -148,33 +167,16 @@ try
                     response.Status = "1 Ok";
                     break;
             }
-        }
-        catch (Exception ex)
-        {
-            response.Status = "4 illegal body";
-            Console.WriteLine($"Error: {ex.Message}");
 
-            byte[] msg = Encoding.UTF8.GetBytes(ToJson(response));
-            stream.Write(msg, 0, msg.Length);
+            byte[] responseMsg = Encoding.UTF8.GetBytes(ToJson(response));
+            stream.Write(responseMsg, 0, responseMsg.Length);
             stream.Flush();
-            client.Close();
-            continue; 
         }
-
-        byte[] responseMsg = Encoding.UTF8.GetBytes(ToJson(response));
-        stream.Write(responseMsg, 0, responseMsg.Length);
-        stream.Flush();
-        client.Close();
     }
-}
-catch (SocketException e)
-{
-    Console.WriteLine($"SocketException: {e}");
-}
-finally
-{
-    server?.Stop();
-    Console.WriteLine("Server stopped.");
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error handling client: {ex.Message}");
+    }
 }
 
 Console.WriteLine("\nHit enter to continue...");

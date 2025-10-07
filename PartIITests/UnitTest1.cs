@@ -604,7 +604,7 @@ public static class Util
     public static Response ReadResponse(this TcpClient client)
     {
         var strm = client.GetStream();
-        //strm.ReadTimeout = 1000;
+        //strm.ReadTimeout = 250;
         byte[] resp = new byte[2048];
         using (var memStream = new MemoryStream())
         {
