@@ -2,16 +2,16 @@ using System;
 
 namespace Category;
 
-class CategoryService
+public class CategoryService
 {
     public static List<Category> categories = new List<Category>
     {
-        new Category {Cid = 1, Name = "Beverages"},
-        new Category {Cid = 2, Name = "Condiments"},
-        new Category {Cid = 3, Name = "Confections"},
+        new Category {Id = 1, Name = "Beverages"},
+        new Category {Id = 2, Name = "Condiments"},
+        new Category {Id = 3, Name = "Confections"},
 
     };
-    public static List<Category> GetCategories()
+    public List<Category> GetCategories()
     {
         foreach (Category c in categories)
         {
@@ -20,20 +20,27 @@ class CategoryService
         return categories;
     }
 
-    public static bool CreateCategory(string name)
+    public bool CreateCategory(int id, string name)
     {
-        var category = new Category { Cid = categories.Count + 1, Name = name };
+        var testCategory = GetCategory(id);
+        if (testCategory is not null)
+        {
+            return false;
+        }
+        //var category = new Category { Cid = categories.Count + 1, Name = name };
+        var category = new Category { Id = id, Name = name };
+
         categories.Add(category);
 
         return true;
     }
 
-    public static Category? GetCategory(int cid)
+    public Category? GetCategory(int cid)
     {
-        return categories.Find(c => c.Cid == cid);
+        return categories.Find(c => c.Id == cid);
     }
 
-    public static bool UpdateCategory(int id, string newName)
+    public bool UpdateCategory(int id, string newName)
     {
         Category category = GetCategory(id);
         if (category is null) return false;
@@ -43,7 +50,7 @@ class CategoryService
         return true;
     }
 
-    public static bool DeleteCategory(int id)
+    public bool DeleteCategory(int id)
     {
         Category category = GetCategory(id);
         if (category is null) return false;
