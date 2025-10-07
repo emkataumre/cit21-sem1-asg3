@@ -1,1 +1,0 @@
-﻿Console.WriteLine("Second part of the assignment");
