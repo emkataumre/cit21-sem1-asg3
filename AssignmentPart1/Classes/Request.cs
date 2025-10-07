@@ -7,3 +7,4 @@ public class Request
     public string Date { get; set; }
     public string? Body { get; set; }
 }
+

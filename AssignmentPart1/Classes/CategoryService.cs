@@ -20,15 +20,13 @@ public class CategoryService
         return categories;
     }
 
-    public bool CreateCategory(int id, string name)
+    public bool CreateCategory(string name, out Category category)
     {
-        var testCategory = GetCategory(id);
-        if (testCategory is not null)
+        category = new Category
         {
-            return false;
-        }
-        //var category = new Category { Cid = categories.Count + 1, Name = name };
-        var category = new Category { Id = id, Name = name };
+            Id = categories.Count + 1,
+            Name = name
+        };
 
         categories.Add(category);
 

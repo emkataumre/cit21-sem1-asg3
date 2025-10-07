@@ -1,39 +1,40 @@
-using System;
-
 namespace Category;
 
 public class UrlParser
 {
-    public bool HasId { get; set; }
-    public int Id { get; set; }
-    public string Path { get; set; } = "";
+    public bool HasId { get; private set; }
+    public int Id { get; private set; }
+    public string Path { get; private set; } = "";
 
     public bool ParseUrl(string url)
     {
-        if (string.IsNullOrWhiteSpace(url))
+        if (string.IsNullOrWhiteSpace(url)) return false;
+
+        string trimmed = url.Trim().TrimEnd('/'); // normalize trailing slash
+        string[] parts = trimmed.Split('/', StringSplitOptions.RemoveEmptyEntries);
+
+        if (parts.Length < 2 || !parts[0].Equals("api", StringComparison.OrdinalIgnoreCase)
+        || !parts[1].Equals("categories", StringComparison.OrdinalIgnoreCase))
         {
             return false;
         }
 
-        string trimmedUrl = url.Trim();
-        string[] split = url.Split('/');
-        string idSplit = split.LastOrDefault();
-
-        if (!string.IsNullOrWhiteSpace(idSplit) && int.TryParse(idSplit, out int idInt))
+        if (parts.Length == 2)
         {
-            HasId = true;
-            Id = idInt;
-            Path = string.Join("/", split.SkipLast(1));
-        }
-        else
-        {
+            Path = "/api/categories";
             HasId = false;
             Id = 0;
-            Path = trimmedUrl;
+            return true;
         }
 
-        return true;
-    }
+        if (parts.Length == 3 && int.TryParse(parts[2], out int id) && id > 0)
+        {
+            Path = "/api/categories";
+            HasId = true;
+            Id = id;
+            return true;
+        }
 
+        return false;
+    }
 }
-//validate body

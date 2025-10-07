@@ -18,26 +18,26 @@ public class RequestValidator
 
         if (string.IsNullOrWhiteSpace(request.Method))
         {
-            errors.Add("4 missing method");
+            errors.Add("missing method");
         }
         else if (!validMethods.Contains(request.Method))
         {
-            errors.Add("4 illegal method");
+            errors.Add("illegal method");
         }
 
         if (string.IsNullOrWhiteSpace(request.Path))
         {
-            errors.Add("4 missing path");
+            errors.Add("missing path");
 
         }
 
         if (string.IsNullOrWhiteSpace(request.Date))
         {
-            errors.Add("4 missing date");
+            errors.Add("missing date");
         }
         else if (!long.TryParse(request.Date, out long ts) || ts <= 0)
         {
-            errors.Add("4 illegal date");
+            errors.Add("illegal date");
         }
 
 
@@ -45,7 +45,7 @@ public class RequestValidator
         {
             if (string.IsNullOrWhiteSpace(request.Body))
             {
-                errors.Add("4 missing body");
+                errors.Add("missing body");
             }
             else if (methodsRequiringJsonBody.Contains(request.Method))
             {
